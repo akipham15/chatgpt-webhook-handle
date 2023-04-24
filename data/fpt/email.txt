@@ -1,0 +1,32 @@
+Tôi sẽ dùng địa chỉ email mới từ khi nào
+Dự án chuyển đổi, hợp nhất FPT.COM diễn ra từ 15/3-31/8/2023. Trong khoảng thời gian này sẽ tiến hành chuyển đổi cho các công ty thành viên. Trong quá trình triển khai, hệ thống sẽ tự động gửi Account mới (@FPT.COM) về hòm mail cũ của bạn. Bạn vui lòng liên hệ với IT đơn vị mình được hỗ trợ.
+Thời gian duy trì địa chỉ email cũ là bao lâu?
+Hệ thống email theo domain cũ sẽ tiếp tục cho phép gửi/nhận tới 13/09/2023. Trong trường hợp muốn duy trì tài khoản cũ lâu hơn, bạn vui lòng liên hệ với IT đơn vị để được hỗ trợ. IT sẽ tiến hành chủ động forward từ email cũ sang email mới. Tuy nhiên để đảm bảo sự chủ động và tránh quá tải, khuyến khích cán bộ nhân viên tự thực hiện việc này
+Ai sẽ chuyển dữ liệu trên OneDrive cá nhân?
+Dữ liệu trên OneDrive cá nhân sẽ do người dùng chủ động thực hiện theo kế hoạch của CTTV. User tự thực hiện theo hướng dẫn của IT: https://daotao.fpt.com.vn/Course/Courseinfo?CourseID=5353&cid=3
+Ai sẽ chuyển dữ liệu trên SharePoint site của bộ phận/phòng ban?
+Dữ liệu trên SharePoint site của bộ phận/phòng ban sẽ do User là Admin của site chủ động thực hiện theo kế hoạch của CTTV. Admin tự thực hiện theo hướng dẫn của IT: https://daotao.fpt.com.vn/Course/Courseinfo?CourseID=5353&cid=3
+Dữ liệu chat trên Teams chat: người với người, hay chat nhóm thì có tự động chuyển đổi sang hệ thống mới không?
+Do đặc thù của MS Teams và việc chuyển đổi này, nội dung chat của FPT và các CTTV (trừ FSoft) sẽ chỉ còn ở hệ thống cũ, FPT sẽ duy trì hệ thống này tới 13/09/2023. Cán bộ nhân viên chủ động copy dữ liệu về, tự tạo các group chat mới và duy trì công việc hiện tại
+Các kênh chat Teams đang làm việc với KH bên ngoài FPT thì thế nào?
+Nếu kênh chat đó do khách hàng tạo ra thì bạn chỉ cần join account email mới vào kênh chat đó là bạn làm việc bình thường. Nhưng nếu kênh chat đó do bạn tạo thì kênh đó sẽ chỉ duy trì đến 13/09/2023. Bạn cần chủ động thông báo cho khách hàng và chuyển sang kênh chat mới
+Các địa chỉ email cũ đang đang ký để làm partner với các hãng, nhận các chương trình từ các hãng thì xử lý thế nào?
+Căn cứ trên thời gian cho phép nhận/gửi trên domain cũ, bạn cần phải có kế hoạch thông báo với đối tác để đổi sang email mới
+Các ứng dụng khác của Microsoft như PowerApp, PowerAutomate, … thì chuyển đổi thế nào?
+Hiện tại các ứng dụng khác sẽ do người dùng tự thực hiện chuyển đổi
+Việc phân quyền trên SharePoint site mới sẽ làm thế nào?
+Admin của SharePoint site sẽ chủ động cấu hình share site hoặc file/folder theo site cũ bằng tay.
+Làm sao giữ được phân quyền trên OneDrive cũ?
+Hiện tại chưa có tool migrate việc phân quyền này nên người dùng tự đối chiếu phân quyền cũ và cấu hình phân quyền truy nhập File/folder cho OneDrive mới.
+Tại sao tôi lại bị chuyển đổi acc/không được giữ lại acc email cũ
+Dự án hợp nhất, chuyển đổi FPT.COM diễn ra trên quy mô Toàn tập đoàn. Trong quá trình chuyển đổi từ @fpt.com.vn và @fsoft.com.vn sang @fpt.com, có nhiều acc bị trùng nhau. Để xử lý các acc trùng, Tập đoàn đã thống nhất một số tiêu chí như cấp cán bộ (level), nhóm công việc đang đảm nhiệm, thâm niên để xác định acc được giữ, acc phải thay đổi. Danh sách acc được giữ, acc phải thay đổi đã được Ban dự án làm việc, confirm với từng CTTV.
+Tôi phải thông báo cho khách hàng/đối tác như thế nào để họ nắm được thông tin về việc chuyển đổi này
+Khi nào thì các hệ thống dùng chung của tập đoàn phải sử dụng account mới?
+Bạn tham khảo kế hoạch chuyển đổi dự kiến như bên dưới. Tuy nhiên thời gian có thể bị điều chỉnh trong quá trình triển khai. Thông tin chi tiết sẽ được thông báo cho người dùng theo lộ trình triển khai của từng ứng dụng.
+Copy thời gian dự kiến vào đây
+Dữ liệu chat trong WorkChat có bị thay đổi, có bị mất hay tự cá nhân phải copy về?
+Dữ liệu WorkChat là nội dung chat sẽ được chuyển tự động và gán đúng cho user account mới của từng người. Về cơ bản, user chỉ thay đổi xác thực bằng account email mới, dữ liệu chat vẫn được giữ nguyên.
+Các group có bị thay đổi sau khi chuyển đổi hay không
+Gần như toàn bộ các group được giữ nguyên, chỉ có một vài group tên đặc biệt như HO sẽ được quy hoạch lại.
+TuLT là ai ?
+TuLT là IT của CSOC, người sẽ hỗ trợ bạn trong việc chuyển đổi email này.
