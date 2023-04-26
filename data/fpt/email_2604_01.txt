@@ -1,4 +1,4 @@
-﻿dữ liệu cũ trong outlook trong mail cũ fpt.com.vn có được backup và chuyển sang cho mail mới fpt.com hay không? vì đang dùng outlook bản web 
+﻿dữ liệu cũ trong outlook trong mail cũ fpt.com.vn có được backup và chuyển sang cho mail mới fpt.com hay không? vì đang dùng outlook bản web
 Các email năm 2023 sẽ được chuyển trước để người dùng thuận tiện làm việc. Email trước đó sẽ được chuyển dần trong 2 tháng tiếp theo. Trong thời gian chuyển đổi, người dùng có thể login vào account cũ để tra lại các mail chưa được chuyển. Phần calendar và rule mail người dùng chủ động tạo lại từ đầu.
 
 
@@ -8,7 +8,7 @@ Việc sử dụng gói cước ưu đãi không ảnh hưởng bởi việc chu
 
 
 Bao giờ thì tôi có account mới đây ?
-Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023. 
+Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023.
 
 
 Của tôi trước là gói E3 sao giờ lại là E1?
@@ -85,7 +85,7 @@ Với các ứng dụng đã hoàn tất chuyển đổi xác thực, người d
 
 
 Tài khoản của tôi là gì trên hệ thống @fpt.com?
-Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023. 
+Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023.
 
 
 Tại sao nhiều mail cũ của tôi tự nhiên lại thành trạng thái chưa đọc (unread)?
@@ -145,7 +145,7 @@ Dung lượng lưu trữ trên email mới tương đương với dung lượng 
 
 
 Những dịch vụ nào sẽ bị ảnh hưởng sau khi chuyển email ?
-Tất cả những dịch vụ có sử dụng email làm phương thức xác thực đều sẽ bị ảnh hưởng bởi việc chuyển đổi này. 
+Tất cả những dịch vụ có sử dụng email làm phương thức xác thực đều sẽ bị ảnh hưởng bởi việc chuyển đổi này.
 
 
 Tôi không đăng nhập được vào VPN bằng account mới, làm thế nào bây giờ?
@@ -189,7 +189,7 @@ Các email năm 2023 sẽ được chuyển trước để người dùng thuậ
 
 
 Tôi không nhận được thông báo password.?
-Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023. 
+Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023.
 
 
 FPT đã cung cấp hỗ trợ kỹ thuật cho người dùng khi gặp vấn đề về tài khoản Email @fpt.com không?
@@ -264,7 +264,7 @@ Sau khi chuyển đổi account, nếu không login được các dịch vụ/�
 
 
 Hiện em vẫn chưa nhận được mail báo chuyển đổi sang domain mới. Anh/chị check giúp em với ạ?
-Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023. 
+Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023.
 
 
 Hiện tại account mới của mình không login được Office 365 nhờ anh chị support giúp ạ?
@@ -338,3 +338,91 @@ Vui lòng kiểm tra đúng user và password mới trước khi đăng nhập.
 Sau khi chuyển đổi doiman fpt.com.vn sang fpt.com thì em bị mất quyền vào Power Bi?
 Sau khi chuyển đổi domain fpt.com.vn sang fpt.com mà bị mất quyền vào Power Bi hoặc bất kỳ ứng dụng nào khác, anh/chị vui lòng mô tả cụ thể thông tin vào ticket theo đường dẫn sau:
 https://ssc.fpt.net/secure/SSC01CreateTicket.jspa?processId=332&catalogId=11&issueKeys=
+
+
+Địa chỉ trang web đổi mật khẩu và unlock account: https://ess.fpt.com
+
+
+Account mới của tôi là gì?
+Account mới sẽ được gửi đến người dùng bắt đầu từ ngày 08/05/2023. Nếu có nhu cầu đặc biệt cần cấp sớm hơn, có thể tạo ticket với nhân sự để được active sớm
+
+
+Ưu tiên chuyển đổi phần email và account trước để người dùng làm việc được trên workchat và mail bằng account mới.
+
+
+Người dùng có thể đăng nhập cả account cũ và mới trên cùng trình duyệt. Khi login vào các ứng dụng có sử dụng đăng nhập bằng email, trình duyệt sẽ hiện ra cửa sổ để người dùng lựa chọn accout cũ hay mới. Nếu ứng dụng đã được chuyển đổi xác thực, vui lòng đăng nhặp bằng account mới, nếu ứng dụng chưa chuyển đổi, vui lòng đăng nhập bằng account cũ.
+
+
+Tôi có thể xem danh sách các ứng dụng đã được chuyển đổi xác thực ở đâu?
+Danh sách các ứng dụng đã chuyển đổi được cập nhật tại đây ....
+
+
+Những ứng dụng nào đã được chuyển đổi xác thực?
+Danh sách các ứng dụng đã chuyển đổi được cập nhật tại đây ....
+
+
+Dự án chuyển đổi FPT.COM chính thức được triển khai từ 15/03/2023. Đây là một bước tiến trong quá trình toàn cầu hoá, tăng cường vị thế trên trường quốc tế của FPT, đồng thời góp phần mang đến trải nghiệm thuận tiện cho cán bộ nhân viên và khách hàng.
+
+
+Đổi mật khẩu trên accoun mới như thế nào?
+Vui lòng xem hướng dẫn đổi mật khẩu tại đây ...
+
+
+Bật xác thực hai bước trên account mới như thế nào?
+Vui lòng xem hướng dẫn bật xác thực 2 bước tại đây...
+
+
+Chuyển đổi dữ liệu onedrive sang account mới như thế nào?
+Vui lòng xem hướng dẫn chuyển đổi Onedrive tại đây ...
+
+
+Dự án chuyển đổi FPT.COM sẽ được triển khai từ 15/3 đến 31/8. Theo đó, các tài khoản email của CBNV có đuôi @FPT.COM.VN và @FSOFT.COM.VN sẽ được chuyển đổi thành địa chỉ email chung @FPT.COM. Đây là một bước tiến trong quá trình toàn cầu hoá, tăng cường vị thế trên trường quốc tế của FPT, đồng thời góp phần mang đến trải nghiệm thuận tiện cho CBNV và khách hàng.
+
+
+Toàn bộ tài khoản mới @FPT.COM sẽ được bàn giao qua email cũ cho từng CBNV sau khi được khởi tạo. Mật khẩu sẽ được gửi tới địa chỉ email hiện tại của CBNV theo kế hoạch chuyển đổi từng đơn vị.
+
+
+Tài khoản @fpt.com.vn sẽ được duy trì tới ngày 13/9. Trong trường hợp có nhu cầu giữ lại để phục vụ công việc, CBNV liên hệ IT đơn vị. Khi có các thắc mắc và yêu cầu hỗ trợ, người FPT liên hệ cán bộ HC-NS đơn vị.
+
+
+Dự án chuyển đổi FPT.COM chính thức được triển khai từ 15/03/2023. Đây là một bước tiến trong quá trình toàn cầu hoá, tăng cường vị thế trên trường quốc tế của FPT, đồng thời góp phần mang đến trải nghiệm thuận tiện cho cán bộ nhân viên và khách hàng.
+
+
+Phát biểu tại sự kiện, anh Nguyễn Thế Phương - Phó tổng giám đốc FPT nhấn mạnh dự án này vô cùng ý nghĩa về mặt hình ảnh của FPT, hướng đến công ty toàn cầu, đặc biệt FPT Software là công ty chiến lược quan trọng của tập đoàn (đang có tên miền riêng fsoft.com.vn). Với việc hợp nhất tên miền, việc làm chung trong nội bộ và hình ảnh “One FPT” sẽ tốt lên nhiều.
+
+
+tại sao cần chuyển đổi sang email fpt.com?
+Anh Nguyễn Xuân Việt - Giám đốc Công nghệ Thông tin FPT nhấn mạnh, dự án giúp hiện thực hóa chiến lược go global - toàn cầu hoá của FPT.
+Anh Đào Duy Cường - Giám đốc Chuyển đổi số FPT Software cho rằng với dự án này, các vấn đề như thiếu đồng bộ giữa email và website công ty FSOFT không còn nữa, đồng thời giúp FPT cũng như FPT Software hướng đến mục tiêu trở thành công ty toàn cầu. Anh Cường cũng đánh giá dự án này cực kỳ phức tạp, khối lượng công việc lớn, có nhiều phát sinh khiến hướng đi của dự án liên tục thay đổi. Tuy nhiên, các bên đều hợp tác cởi mở, tận tâm tận lực để cùng tìm giải pháp tốt nhất, đem lại sự thuận tiện nhất cho hơn 60.000 nhân viên FPT. Anh tin với tinh thần này, dự án sẽ đạt mục tiêu thành công tốt đẹp.
+
+
+Dự kiến, FPT Software sẽ tiên phong hoàn tất việc chuyển đổi vào ngày 28/4. Các đơn vị sẽ sẽ hoàn tất chuyển đổi trước ngày 23/5 gồm: FPT Digital, FPT Smart Cloud, FPT Online, FPT Retail, Synnex FPT. Các đơn vị còn lại: FPT Telecom, FPT IS, FPT HO, DC5 sẽ hoàn thành việc chuyển đổi trước ngày 31/8.
+
+
+Toàn bộ email của cán bộ nhân viên FPT sẽ chuyển đổi sang tên miền @fpt.com (đơn vị sử dụng tên miền như fe.edu.vn, vnexpress.net, telehouse.vn sẽ có thông báo sau). Khi tới lịch chuyển đổi của từng đơn vị, từng cá nhân sẽ nhận được tài khoản và mật khẩu thông qua hòm mail hiện tại.
+
+
+Dự kiến, FPT Software sẽ hoàn tất việc chuyển đổi vào ngày 28/4. Các đơn vị sẽ hoàn tất chuyển đổi trước ngày 23/5 gồm: FPT Digital, FPT Smart Cloud, FPT Online, FPT Retail, Synnex FPT. Các đơn vị còn lại: FPT Telecom, FPT IS, FPT HO sẽ hoàn thành việc chuyển đổi trước ngày 31/8.
+
+
+Từ 15/4, CBNV có thể đăng nhập bằng cả tài khoản mới và cũ vào các hệ thống: Loyalty, Epurchase, Epayment, Eiso, App Inventory, Tuyendung.
+
+
+CBNV có thể đăng nhập vào các hệ thống trên (https://epayment.fpt.com.vn/, https://epurchase.fpt.com.vn/,…) bằng cả tài khoản cũ (@FPT.COM.VN) và tài khoản mới (@FPT.COM). Hai tài khoản email được sử dụng song song cho đến khi có thông báo mới.
+
+
+Để chuyển đổi, cán bộ nhân viên FPT cần đăng nhập vào hệ thống và đổi mật khẩu; thực hiện sao lưu dữ liệu OneDrive, Sharepoint, Teams của cá nhân; thực hiện đăng tải dữ liệu lên tài khoản mới. Người dùng có sử dụng PowerApps như PowerBI, Automate sẽ tự sao lưu dữ liệu của cá nhân.
+
+
+Tài email khoản cũ (@fpt.com.vn) chỉ được phép nhận email và duy trì trong 2 năm tính từ 13/9/2023. Sau thời gian này, tài khoản cũ sẽ được thu hồi.
+
+
+Trong giai đoạn chuyển đổi (@FPT.COM.VN sang @FPT.COM), nguy cơ bị tấn công qua email càng tăng cao. Người FPT cần cẩn trọng với email lừa đảo. Thông tin chi tiết: https://chungta.vn/photo/infographic/nguoi-fpt-can-can-trong-voi-email-lua-dao-1136656.html
+
+
+Kịch bản chuyển đổi FPT.COM ở FTEL như sau:
+Các mailbox sẽ được IT khởi tạo, đồng bộ dữ liệu email. Ngày 8/5, ban nhân sự sẽ bàn giao tài khoản đăng nhập email mới (@FPT.COM) cho từng cán bộ. Khi nhận được email từ FTELHR thông báo username password, mọi người cần truy cập trang web https://ess.fpt.com để đổi mật khẩu lần đầu, đăng ký xác thực hai bước (OTP/MFA) và đăng nhập vào Workplace/Workchat bằng tài khoản mới. Chi tiết hướng dẫn active tài khoản mới, vui lòng xem ở đây: https://
+Trong vòng 2 tuần đầu tiên (từ 8/5/2023 đến 22/5/2023), email gửi tới địa chỉ @fpt.com.vn sẽ đi vào cả hai mailbox cũ (@fpt.com.vn) và mới (@FPT.COM). Sau ngày 22/5/2023, chỉ có mailbox mới nhận được email gửi tới địa chỉ @fpt.com.vn, mailbox cũ không nhận được email nữa. Việc forward email từ địa chỉ @fpt.com.vn sang địa chỉ @fpt.com sẽ được duy trì 2 năm đến 13/9/2025. Sau thời gian này, tài khoản cũ sẽ được thu hồi.
+Sau khi kích hoạt tài khoản mới @FPT.COM, người dùng có thể truy cập một số ứng dụng đã chuyển đổi xác thực bằng tài khoản mới. Danh sách các ứng dụng đã hoàn thành chuyển đổi xác thực có thể theo dõi ở đây: https:// Ngoài ra đơn vị chủ quản của ứng dụng sẽ có thông báo riêng về tiến độ chuyển đổi xác thực của từng ứng dụng. Các ứng dụng chưa chuyển đổi xác thực, người dùng tiếp tục sử dụng tài khoản cũ để đăng nhập.
+Các site Sharepoint sẽ không được chuyển đổi dữ liệu tự động. Admin của site cần chủ động thực hiện backup/restore dữ liệu sang site Sharepoint mới. Hướng dẫn chi tiết chuyển đổi Sharepoint, vui lòng xem ở đây: https:// Trong thời gian chưa chuyển đổi, người dùng tiếp tục dùng tài khoản cũ (@fpt.com.vn) để truy cập vào Sharepoint. Admin của các site Sharepoint có dữ liệu lớn cần hỗ trợ chuyển đổi có thể liên hệ bộ phận IT để được giúp đỡ.
+Dữ liệu OneDrive của người dùng có gói Office 365 E1 và E3 không được chuyển đổi dữ liệu tự động sang tài khoản mới. Hướng dẫn chi tiết chuyển đổi dữ liệu OneDrive, vui lòng xem ở đây: https://

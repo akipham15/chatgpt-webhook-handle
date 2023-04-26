@@ -7,10 +7,14 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask import request, jsonify
 from logzero import logger
-from mongoengine import (Document, IntField, StringField, connect)
+from mongoengine import connect
 
-from chatgpt import get_answer_old, get_answer
-from langchain_chatgpt import get_answer
+from app import constants
+from app.chatgpt import get_answer_old, get_answer
+from app.config import Config
+from app.langchain_chatgpt import get_answer_with_documents, get_default_answer
+from app.libs.rate_limits import ChatLimit
+from app.models import Chat
 
 load_dotenv()
 EXCEPT_TEXT = ['/new']
@@ -20,8 +24,7 @@ WEBHOOK_TOKEN = os.getenv('WEBHOOK_TOKEN')
 connect(db='wpbotchatgpt', host='localhost', port=27017)
 
 app = Flask(__name__)
-
-logger.info(WEBHOOK_TOKEN)
+app.config.from_object(Config)
 
 
 @app.route("/webhook/handle/{}".format(WEBHOOK_TOKEN), methods=['GET', 'POST'])
@@ -34,8 +37,20 @@ def webhook_handle():
             email = data.get('user_id')
             message = data.get('text')
             # answer = handle_text_and_get_answer(email, message)
-            answer = get_answer_from_chain(message)
-            logger.info(answer)
+            chat_limit = ChatLimit(name=email, expire=Config.LIMIT_MESSAGE_EXPIRE, limit=Config.LIMIT_MESSAGE_NUMBER)
+            if chat_limit.has_been_reached():
+                answer = get_default_answer(constants.LIMITED_ANSWERS)
+                logger.warning(f'user limited, usage: {chat_limit.get_usage()}')
+            else:
+                answer = get_answer_from_chain(email, message, use_histories=False)
+
+            log_content = {
+                'action': 'webhook_handle',
+                'email': email,
+                'question': message,
+                'answer': answer
+            }
+            logger.info(log_content)
 
             response = send_facebook_message(email, answer)
             if response.status_code == 200:
@@ -46,21 +61,25 @@ def webhook_handle():
     return jsonify({'text': 'hmm...?!'})
 
 
-class Chat(Document):
-    telegram_id = StringField(required=False)
-    email = StringField(required=False)
-    username = StringField(required=False)
-    input = StringField(required=False)
-    model = StringField(required=False)
-    conversation_id = StringField(required=False)
-    message_id = StringField(required=False)
-    response = StringField(required=False)
-    created = IntField(required=False)
+def langchain_get_chat_from_user(email=None, num_of_history: int = 2):
+    user_chats = Chat.objects(email=str(email)).order_by(
+        '-created')[:num_of_history]
+    chats = []
+
+    if user_chats:
+        for doc in user_chats:
+            if doc.input in EXCEPT_TEXT:
+                break
+            else:
+                history = (doc.input, doc.response)
+                chats.append(history)
+
+    return chats[::-1]
 
 
-def get_chat_from_user(email=None):
-    num_of_history = 2
-    user_chats = Chat.objects(email=str(email)).order_by('-created')[:num_of_history]
+def get_chat_from_user(email=None, num_of_history: int = 2):
+    user_chats = Chat.objects(email=str(email)).order_by(
+        '-created')[:num_of_history]
     chats = []
     context = None
 
@@ -72,7 +91,8 @@ def get_chat_from_user(email=None):
                 if not context and doc.conversation_id:
                     context = doc.conversation_id
                 if doc.response:
-                    chats.append({"role": "assistant", "content": doc.response})
+                    chats.append(
+                        {"role": "assistant", "content": doc.response})
                 if doc.input:
                     chats.append({"role": "user", "content": doc.input})
 
@@ -80,7 +100,8 @@ def get_chat_from_user(email=None):
 
 
 def send_facebook_message(email, message_text):
-    url = "https://alerts.soc.fpt.net/webhooks/{}/facebook".format(os.environ.get('IRIS_TOKEN'))
+    url = "https://alerts.soc.fpt.net/webhooks/{}/facebook".format(
+        os.environ.get('IRIS_TOKEN'))
 
     payload = {
         "text": message_text,
@@ -95,8 +116,40 @@ def send_facebook_message(email, message_text):
     return response
 
 
-def get_answer_from_chain(message: str):
-    answer = get_answer(message)
+def get_answer_from_chain(email: str, message: str, use_histories=False):
+    if not message in EXCEPT_TEXT:
+        histories = []
+        if use_histories:
+            histories = langchain_get_chat_from_user(
+                email=email, num_of_history=1)
+            logger.info(histories)
+
+        answer, token_use = get_answer_with_documents(message, histories)
+        chat_result = Chat(
+            email=str(email),
+            input=str(message),
+            model='text-davinci-003',
+            conversation_id=str(uuid4()),
+            response=answer,
+            created=datetime.utcnow().timestamp()
+        )
+        chat_result.save()
+        # update user limit
+        if answer not in (constants.DEFAULT_ANSWERS + constants.MESSAGE_TOO_LONG):
+            chat_limit = ChatLimit(name=email, expire=Config.LIMIT_MESSAGE_EXPIRE, limit=Config.LIMIT_MESSAGE_NUMBER)
+            chat_limit.increment_usage(increment_by=token_use)
+    else:
+        chat_result = Chat(
+            email=str(email),
+            input=str(message),
+            model='',
+            message_id='',
+            response='',
+            created=datetime.utcnow().timestamp()
+        )
+        chat_result.save()
+        answer = 'Hội thoại mới đã sẵn sàng :)'
+
     return answer
 
 
