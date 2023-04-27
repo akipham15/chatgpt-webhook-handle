@@ -1,7 +1,6 @@
 DEFAULT_ANSWERS = [
-    'Xin lỗi tôi không hiểu câu hỏi của bạn.',
-    'Bạn hỏi anh TuLT nhé.',
-    'Bạn hỏi anh VuLe nhé.',
+    'Câu hỏi của bạn chưa có trong dữ liệu, tôi sẽ cố gắng hoàn thiện hơn.',
+    'Câu hỏi của bạn hiện chưa có trong dữ liệu, câu hỏi sẽ được chuyển đến kỹ thuật viên bạn nhé.',
 ]
 
 LIMITED_ANSWERS = [

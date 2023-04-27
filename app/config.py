@@ -21,5 +21,7 @@ class Config(BaseConfig):
     LIMIT_MESSAGE_EXPIRE = 60 * 60 * 24
     LIMIT_MESSAGE_NUMBER = 12000
 
-    WELCOME_TRAIN_DATA_PATH = './data/fpt/welcome.txt'
-    QA_TRAIN_DATA_PATH = './data/fpt/email_2604_01.txt'
+    DEFAULT_QUERY_DISTANCE = 0.33
+
+    WELCOME_TRAIN_DATA_PATH = './data/train/welcome.csv'
+    QA_TRAIN_DATA_PATH = './data/train/FPTCOM_QA.csv'
