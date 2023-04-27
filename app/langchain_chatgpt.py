@@ -133,7 +133,7 @@ def get_query_distance(docsearch, query, k=1, is_shuffle=False, distance=Config.
     score_query_docs = docsearch.similarity_search_with_score(
         query, k=k)
 
-    # logger.info(score_query_docs)
+    logger.info(score_query_docs)
     valid_docs = []
     for doc in score_query_docs:
         _doc, query_distance = doc
@@ -143,9 +143,13 @@ def get_query_distance(docsearch, query, k=1, is_shuffle=False, distance=Config.
     if is_shuffle:
         random.shuffle(valid_docs)
 
-    doc_valid, doc_distance = valid_docs[0]
-    logger.info(doc_valid)
-    logger.info(doc_distance)
+    doc_valid = None
+    doc_distance = 1
+    if valid_docs:
+        doc_valid, doc_distance = valid_docs[0]
+        logger.info(doc_valid)
+        logger.info(doc_distance)
+
     return doc_valid, doc_distance
 
 
@@ -171,7 +175,7 @@ def get_answer_with_documents(query: str, histories: list):
 
             valid_doc, query_distance = get_query_distance(
                 docsearch, query, k=3, is_shuffle=True, distance=0.395)
-            if query_distance < Config.DEFAULT_QUERY_DISTANCE:
+            if valid_doc:
                 result = valid_doc.page_content
                 if 'answer:' in result:
                     result = result.split('answer:')[-1].strip()
