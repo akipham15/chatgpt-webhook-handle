@@ -26,6 +26,9 @@ connect(db='wpbotchatgpt', host='localhost', port=27017)
 app = Flask(__name__)
 app.config.from_object(Config)
 
+@app.route("/healthz", methods=['GET'])
+def healthz():
+    return 'ok'
 
 @app.route("/webhook/handle/{}".format(WEBHOOK_TOKEN), methods=['GET', 'POST'])
 def webhook_handle():
