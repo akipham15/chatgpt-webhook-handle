@@ -65,7 +65,7 @@ def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
     embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     docsearch = Chroma(persist_directory=persist_name,
                        embedding_function=embedding)
-    qa_chain = load_qa_chain(LLM, chain_type="stuff", )
+    qa_chain = load_qa_chain(LLM, chain_type="stuff")
 
     logger.info('get_qa_chain done.')
     return qa_chain, docsearch
@@ -92,93 +92,53 @@ def get_default_answer(answers: list = constants.DEFAULT_ANSWERS):
     return answers[random.randint(0, len(answers) - 1)]
 
 
-def get_answer_result(docsearch, query, histories):
-    vectordbkwargs = {"search_distance": 0.395}
 
-    retriever = docsearch.as_retriever(
-        search_kwargs={"k": constants.MIN_DOCS, "distance_metric": 'cos'})
-    # docsearch.add_texts(["Ankush went to Princeton"])
-    # qa = RetrievalQA(combine_documents_chain=qa_chain, retriever=query_docs)
-
-    qa = ConversationalRetrievalChain.from_llm(
-        llm=LLM,
-        retriever=retriever,
-        return_source_documents=True,
-        verbose=True,
-        get_chat_history=get_chat_history,
-    )
-
-    with get_openai_callback() as cb:
-        ans = qa({"question": query, "chat_history": histories,
-                  "vectordbkwargs": vectordbkwargs})
-        logger.info(ans)
-        result = ans.get('answer')
-        token_use = get_token_cost(cb)
-        return result, token_use
-
-
-def get_answer_via_docs(qa_chain, docs, query: str):
-    if not isinstance(docs, list):
-        docs = [docs]
-
-    with get_openai_callback() as cb:
-        result = qa_chain.run(input_documents=docs, question=query)
-        token_use = get_token_cost(cb)
-
-    return result, token_use
-
-
-def get_query_distance(docsearch, query, k=1, is_shuffle=False, distance=Config.DEFAULT_QUERY_DISTANCE):
-    # query_docs = docsearch.similarity_search(query, k=MIN_DOCS)
-    score_query_docs = docsearch.similarity_search_with_score(
-        query, k=k)
-
-    logger.info(score_query_docs)
+def filter_docs(source_docs: list, distance, is_shuffle=False):
     valid_docs = []
-    for doc in score_query_docs:
+    for doc in source_docs:
         _doc, query_distance = doc
+        logger.info(query_distance)
         if query_distance <= distance:
             valid_docs.append((_doc, query_distance))
-
+    
     if is_shuffle:
         random.shuffle(valid_docs)
-
-    doc_valid = None
-    doc_distance = 1
-    if valid_docs:
-        doc_valid, doc_distance = valid_docs[0]
-        logger.info(doc_valid)
-        logger.info(doc_distance)
-
-    return doc_valid, doc_distance
+    
+    return valid_docs
 
 
 def get_answer_with_documents(query: str, histories: list):
-    qa_chain, docsearch = get_qa_chain(
-        Config.QA_TRAIN_DATA_PATH, constants.PERSIST_DIRECTORY_FPT_EXCHANGE, ['question', 'answer', 'note'])
-
     if histories is None:
         histories = []
 
     query_token = LLM.get_num_tokens(query)
     logger.info(f'query_token: {query_token}')
 
-    token_use = 0
+    result = None
+    token_use = query_token
     if query_token <= Config.LIMIT_MESSAGE_TOKEN:
-        valid_doc, query_distance = get_query_distance(docsearch, query)
-        if valid_doc:
-            # result, token_use = get_answer_result(docsearch, query, histories)
-            result, token_use = get_answer_via_docs(qa_chain, valid_doc, query)
-        else:
-            _qa_chain, docsearch = get_qa_chain(
-                Config.WELCOME_TRAIN_DATA_PATH, constants.PERSIST_DIRECTORY_FPT_WELCOME, ['question', 'answer'])
+        # query and get answer from db if posible
+        qa_chain, docsearch = get_qa_chain(train_path=Config.QA_TRAIN_DATA_PATH, persist_name=constants.PERSIST_DIRECTORY_FPT_EXCHANGE, fieldnames=['question', 'answer'])
 
-            valid_doc, query_distance = get_query_distance(
-                docsearch, query, k=3, is_shuffle=True, distance=0.395)
-            if valid_doc:
-                result = valid_doc.page_content
-                if 'answer:' in result:
-                    result = result.split('answer:')[-1].strip()
+        with get_openai_callback() as cb:
+            score_query_docs = docsearch.similarity_search_with_score(query, k=3)
+            logger.info(score_query_docs)
+            token_use += get_token_cost(cb)
+
+        valid_docs = filter_docs(score_query_docs, 0.23)
+        if valid_docs:
+            match_doc, doc_distance = valid_docs[0]
+            match_content = match_doc.page_content
+            if 'answer:' in match_content:
+                result = match_content.split('answer:')[-1].strip()
+
+        if not result:
+            valid_docs = filter_docs(score_query_docs, 0.375, is_shuffle=True)
+            if valid_docs:
+                match_doc, doc_distance = valid_docs[0]
+                with get_openai_callback() as cb:
+                    result = qa_chain.run(input_documents=[match_doc], question=query)
+                    token_use += get_token_cost(cb)
             else:
                 result = get_default_answer()
     else:

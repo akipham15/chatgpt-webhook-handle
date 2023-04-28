@@ -8,8 +8,8 @@ from logzero import logger
 
 load_dotenv()
 
-API_KEY = os.getenv('API_KEY')
-openai.api_key = API_KEY
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+openai.api_key = OPENAI_API_KEY
 
 
 # list engines

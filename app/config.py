@@ -19,9 +19,9 @@ class BaseConfig(object):
 class Config(BaseConfig):
     LIMIT_MESSAGE_TOKEN = 256
     LIMIT_MESSAGE_EXPIRE = 60 * 60 * 24
-    LIMIT_MESSAGE_NUMBER = 12000
+    LIMIT_MESSAGE_NUMBER = 10000
 
-    DEFAULT_QUERY_DISTANCE = 0.33
+    DEFAULT_QUERY_DISTANCE = 0.29
 
     WELCOME_TRAIN_DATA_PATH = './data/train/welcome.csv'
-    QA_TRAIN_DATA_PATH = './data/train/FPTCOM_QA.csv'
+    QA_TRAIN_DATA_PATH = './data/train/FPTCOM_QA_2804.csv'
