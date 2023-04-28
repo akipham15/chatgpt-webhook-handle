@@ -91,7 +91,7 @@ def get_answer(conversations: list, model='gpt-3.5-turbo', retry=0):
         # print the completion
         # print(completion)
 
-        response = ChatCompletion(API_KEY).create(conversations, model=model)
+        response = ChatCompletion(OPENAI_API_KEY).create(conversations, model=model)
         if response.status_code == 200:
             completion = response.json()
         else:

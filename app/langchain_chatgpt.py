@@ -135,9 +135,10 @@ def get_answer_with_documents(query: str, histories: list):
         if not result:
             valid_docs = filter_docs(score_query_docs, 0.375, is_shuffle=True)
             if valid_docs:
-                match_doc, doc_distance = valid_docs[0]
+                match_docs = [doc[0] for doc in valid_docs]
+                # match_doc, doc_distance = valid_docs[0]
                 with get_openai_callback() as cb:
-                    result = qa_chain.run(input_documents=[match_doc], question=query)
+                    result = qa_chain.run(input_documents=match_docs, question=query)
                     token_use += get_token_cost(cb)
             else:
                 result = get_default_answer()
