@@ -58,7 +58,7 @@ def webhook_handle():
             else:
                 get_answer_from_chain.delay(email, message, use_histories=False)
 
-    return jsonify({'text': '...'})
+    return jsonify({'text': ''})
 
 
 def get_chat_from_user(email=None, num_of_history: int = 2):
