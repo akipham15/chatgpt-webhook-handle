@@ -1,5 +1,9 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def get_config(key: str, default=None):
     value = os.environ.get(key, default)
@@ -14,6 +18,8 @@ class BaseConfig(object):
     CACHE_REDIS_DB = get_config('CACHE_REDIS_DB')
     CACHE_REDIS_URL = get_config('CACHE_REDIS_URL')
     CACHE_DEFAULT_TIMEOUT = get_config('CACHE_DEFAULT_TIMEOUT')
+
+    SQLALCHEMY_DATABASE_URI = get_config('SQLALCHEMY_DATABASE_URI', 'sqlite:////tmp/itsupport.db')
 
 
 class Config(BaseConfig):

@@ -4,15 +4,12 @@ import random
 from dotenv import load_dotenv
 from langchain import OpenAI
 from langchain.callbacks import get_openai_callback
-from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.question_answering import load_qa_chain
-from langchain.document_loaders import TextLoader
+from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from logzero import logger
-from langchain.document_loaders.csv_loader import CSVLoader
-
 
 from app import constants
 from app.config import Config
@@ -33,8 +30,8 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
         'quotechar': '"',
         'fieldnames': fieldnames
     },
-        # source_column='answer',
-    )
+   # source_column='answer',
+   )
 
     # text_splitter = CharacterTextSplitter(chunk_overlap=70, chunk_size=1000, separator="\n\n\n")
     # loader = DirectoryLoader("./data/fpt/", glob="**/*.txt", loader_cls=TextLoader)
@@ -92,7 +89,6 @@ def get_default_answer(answers: list = constants.DEFAULT_ANSWERS):
     return answers[random.randint(0, len(answers) - 1)]
 
 
-
 def filter_docs(source_docs: list, distance, is_shuffle=False):
     valid_docs = []
     for doc in source_docs:
@@ -100,10 +96,10 @@ def filter_docs(source_docs: list, distance, is_shuffle=False):
         logger.info(query_distance)
         if query_distance <= distance:
             valid_docs.append((_doc, query_distance))
-    
+
     if is_shuffle:
         random.shuffle(valid_docs)
-    
+
     return valid_docs
 
 
@@ -118,7 +114,9 @@ def get_answer_with_documents(query: str, histories: list):
     token_use = query_token
     if query_token <= Config.LIMIT_MESSAGE_TOKEN:
         # query and get answer from db if posible
-        qa_chain, docsearch = get_qa_chain(train_path=Config.QA_TRAIN_DATA_PATH, persist_name=constants.PERSIST_DIRECTORY_FPT_EXCHANGE, fieldnames=['question', 'answer'])
+        qa_chain, docsearch = get_qa_chain(train_path=Config.QA_TRAIN_DATA_PATH,
+                                           persist_name=constants.PERSIST_DIRECTORY_FPT_EXCHANGE,
+                                           fieldnames=['question', 'answer'])
 
         with get_openai_callback() as cb:
             score_query_docs = docsearch.similarity_search_with_score(query, k=3)

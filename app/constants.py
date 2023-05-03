@@ -5,13 +5,14 @@ DEFAULT_ANSWERS = [
 
 LIMITED_ANSWERS = [
     'Bạn hỏi nhiều quá, tôi cần nghỉ ngơi...',
-    '...',
     'Có vẻ bạn có quá nhiều vấn đề cần hỏi, bạn có thể trao đổi trực tiếp với anh TuLT nhé.',
 ]
 
 MESSAGE_TOO_LONG = [
     'Câu hỏi của bạn quá dài.'
 ]
+
+EXCEPT_TEXT = ['/new']
 
 MIN_DOCS = 1
 PERSIST_DIRECTORY_FPT_EXCHANGE = "fpt-mail-exchange"

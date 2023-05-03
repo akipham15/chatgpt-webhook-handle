@@ -64,7 +64,7 @@ def rate_limit(name: str, expire: int = 3, limit: int = None, extra_log: dict = 
             chat_limit = ChatLimit(name=name, expire=expire, limit=limit, extra_log=extra_log)
             if chat_limit.has_been_reached():
                 logger.warning(f'{func.__name__} reach limit. Release after {chat_limit.get_wait_time()}')
-                pass
+                self.retry(countdown=chat_limit.get_wait_time())
             else:
                 chat_limit.increment_usage()
                 return func(self, *args, **kwargs)
