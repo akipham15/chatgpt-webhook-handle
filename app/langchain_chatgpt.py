@@ -30,8 +30,8 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
         'quotechar': '"',
         'fieldnames': fieldnames
     },
-   # source_column='answer',
-   )
+                       # source_column='answer',
+                       )
 
     # text_splitter = CharacterTextSplitter(chunk_overlap=70, chunk_size=1000, separator="\n\n\n")
     # loader = DirectoryLoader("./data/fpt/", glob="**/*.txt", loader_cls=TextLoader)
@@ -93,7 +93,6 @@ def filter_docs(source_docs: list, distance, is_shuffle=False):
     valid_docs = []
     for doc in source_docs:
         _doc, query_distance = doc
-        logger.info(query_distance)
         if query_distance <= distance:
             valid_docs.append((_doc, query_distance))
 
@@ -108,7 +107,13 @@ def get_answer_with_documents(query: str, histories: list):
         histories = []
 
     query_token = LLM.get_num_tokens(query)
-    logger.info(f'query_token: {query_token}')
+    log_content = {
+        'action': 'get_answer_with_docs',
+        'query': query,
+        'valid_docs': [],
+        'result': None,
+        'token_use': 0,
+    }
 
     result = None
     token_use = query_token
@@ -120,7 +125,6 @@ def get_answer_with_documents(query: str, histories: list):
 
         with get_openai_callback() as cb:
             score_query_docs = docsearch.similarity_search_with_score(query, k=3)
-            logger.info(score_query_docs)
             token_use += get_token_cost(cb)
 
         valid_docs = filter_docs(score_query_docs, 0.23)
@@ -131,7 +135,7 @@ def get_answer_with_documents(query: str, histories: list):
                 result = match_content.split('answer:')[-1].strip()
 
         if not result:
-            valid_docs = filter_docs(score_query_docs, 0.375, is_shuffle=True)
+            valid_docs = filter_docs(score_query_docs, 0.365, is_shuffle=True)
             if valid_docs:
                 match_docs = [doc[0] for doc in valid_docs]
                 # match_doc, doc_distance = valid_docs[0]
@@ -140,8 +144,14 @@ def get_answer_with_documents(query: str, histories: list):
                     token_use += get_token_cost(cb)
             else:
                 result = get_default_answer()
+
+        log_content['valid_docs'] = valid_docs
     else:
         result = get_default_answer(constants.MESSAGE_TOO_LONG)
+
+    log_content['result'] = result
+    log_content['token_use'] = token_use
+    logger.info(log_content)
 
     return result, token_use
 
