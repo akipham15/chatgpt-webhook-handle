@@ -38,7 +38,7 @@ def webhook_handle():
         data = request.get_json()
         logger.info(data)
         if data:
-            email = data.get('user_id')
+            email = data.get('workchat_email', data.get('user_id'))
             message = data.get('text')
             if not message:
                 return jsonify({'text': ''})
@@ -56,10 +56,10 @@ def webhook_handle():
                 logger.warning(f'user limited, usage: {chat_limit.get_usage()}')
                 return jsonify({'text': answer})
             else:
-                # get_answer_from_chain.delay(email, message, use_histories=False)
-                answer = get_answer_from_chain(email, message, use_histories=False)
-                if answer:
-                    return jsonify({'text': answer})
+                get_answer_from_chain.delay(email, message, use_histories=False)
+                # answer = get_answer_from_chain(email, message, use_histories=False)
+                # if answer:
+                #     return jsonify({'text': answer})
 
     return jsonify({'text': ''})
 
