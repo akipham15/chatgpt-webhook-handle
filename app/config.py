@@ -30,4 +30,4 @@ class Config(BaseConfig):
     DEFAULT_QUERY_DISTANCE = 0.29
 
     WELCOME_TRAIN_DATA_PATH = get_config('WELCOME_TRAIN_DATA_PATH', './data/train/welcome.csv')
-    QA_TRAIN_DATA_PATH = get_config('QA_TRAIN_DATA_PATH', './data/train/FPTCOM_QA_0405.csv')
+    QA_TRAIN_DATA_PATH = get_config('QA_TRAIN_DATA_PATH', './data/train/FPTCOM_QA_0405_02.csv')
