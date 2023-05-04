@@ -5,7 +5,7 @@ from logzero import logger
 
 
 def send_facebook_message(email, message_text):
-    url = "https://alerts.soc.fpt.net/webhooks/{}/facebook".format(
+    url = "https://alerts.soc.fpt.net/webhooks/{}/facebook_no_register".format(
         os.environ.get('IRIS_TOKEN'))
 
     payload = {
