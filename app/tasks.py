@@ -76,10 +76,9 @@ def get_answer_from_chain(self, email: str, message: str, use_histories=False):
         chat_result.save()
         answer = 'Hội thoại mới đã sẵn sàng :)'
 
-    response = send_facebook_message(email, answer)
-
+    # response = send_facebook_message(email, answer)
+    # log_content['status_code'] = response.status_code
     log_content['answer'] = answer
-    log_content['status_code'] = response.status_code
     logger.info(log_content)
 
     return answer

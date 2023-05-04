@@ -56,7 +56,10 @@ def webhook_handle():
                 logger.warning(f'user limited, usage: {chat_limit.get_usage()}')
                 return jsonify({'text': answer})
             else:
-                get_answer_from_chain.delay(email, message, use_histories=False)
+                # get_answer_from_chain.delay(email, message, use_histories=False)
+                answer = get_answer_from_chain(email, message, use_histories=False)
+                if answer:
+                    return jsonify({'text': answer})
 
     return jsonify({'text': ''})
 
