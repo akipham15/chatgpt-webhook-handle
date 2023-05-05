@@ -142,7 +142,7 @@ def get_answer_with_documents(query: str, histories: list):
             score_query_docs = docsearch.similarity_search_with_score(query, k=3)
             token_use += get_token_cost(cb)
 
-        valid_docs = filter_docs(score_query_docs, 0.23)
+        valid_docs = filter_docs(score_query_docs, 0.245)
         if valid_docs:
             match_doc, doc_distance = valid_docs[0]
             match_content = match_doc.page_content
