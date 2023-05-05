@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from langchain import OpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.chains.question_answering import load_qa_chain
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
+from langchain.prompts import PromptTemplate
+
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
@@ -16,7 +19,7 @@ from app.config import Config
 
 load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-LLM = OpenAI(batch_size=constants.MIN_DOCS + 1, temperature=0, max_tokens=1024)
+LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0, max_tokens=1024)
 
 
 def create_persist_directory(train_path: str, persist_name: str, fieldnames=None):
@@ -62,7 +65,17 @@ def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
     embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     docsearch = Chroma(persist_directory=persist_name,
                        embedding_function=embedding)
-    qa_chain = load_qa_chain(LLM, chain_type="stuff")
+    # qa_chain = load_qa_chain(LLM, chain_type="stuff")
+
+    template = """
+    QUESTION: {question}
+    =========
+    {summaries}
+    =========
+    FINAL ANSWER:
+    """
+    PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
+    qa_chain = load_qa_with_sources_chain(LLM, chain_type="stuff", prompt=PROMPT)
 
     logger.info('get_qa_chain done.')
     return qa_chain, docsearch
@@ -89,12 +102,14 @@ def get_default_answer(answers: list = constants.DEFAULT_ANSWERS):
     return answers[random.randint(0, len(answers) - 1)]
 
 
-def filter_docs(source_docs: list, distance, is_shuffle=False):
+def filter_docs(source_docs: list, distance, is_shuffle=False, k=20):
     valid_docs = []
     for doc in source_docs:
         _doc, query_distance = doc
-        if query_distance <= distance:
+        if query_distance <= distance and len(valid_docs) < k:
             valid_docs.append((_doc, query_distance))
+        else:
+            break
 
     if is_shuffle:
         random.shuffle(valid_docs)
@@ -135,12 +150,15 @@ def get_answer_with_documents(query: str, histories: list):
                 result = match_content.split('answer:')[-1].strip()
 
         if not result:
-            valid_docs = filter_docs(score_query_docs, 0.365, is_shuffle=True)
+            valid_docs = filter_docs(score_query_docs, 0.35, is_shuffle=True)
             if valid_docs:
                 match_docs = [doc[0] for doc in valid_docs]
                 # match_doc, doc_distance = valid_docs[0]
                 with get_openai_callback() as cb:
-                    result = qa_chain.run(input_documents=match_docs, question=query)
+                    # result = qa_chain.run(input_documents=match_docs, question=query)
+                    result = qa_chain({"input_documents": match_docs, "question": query}, return_only_outputs=True)
+                    logger.info(result)
+                    result = result.get('output_text')
                     token_use += get_token_cost(cb)
             else:
                 result = get_default_answer()
