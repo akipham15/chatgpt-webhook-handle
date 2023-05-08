@@ -16,6 +16,7 @@ from logzero import logger
 
 from app import constants
 from app.config import Config
+import csv
 
 load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
@@ -23,12 +24,24 @@ LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0, max_tokens=1024)
 
 
 def create_persist_directory(train_path: str, persist_name: str, fieldnames=None):
-    # train_path = "./data/fpt/email.txt"
-    # loader = TextLoader(train_path)
+
+    # lowercase content
+    location = os.path.dirname(train_path)
+    filename = os.path.basename(train_path)
+    lower_filename = f'lower_{filename}'
+    lower_train_path = os.path.join(location, lower_filename)
+
+    with open(train_path, 'r') as file:
+        with open(lower_train_path, 'w+') as lower_file:
+            for line in file:
+                lower_file.write(line.lower().strip() + "\n")
+                
 
     if not fieldnames:
         fieldnames = []
-    loader = CSVLoader(file_path=train_path, csv_args={
+
+    # loader = TextLoader(lower_train_path)
+    loader = CSVLoader(file_path=lower_train_path, csv_args={
         'delimiter': ',',
         'quotechar': '"',
         'fieldnames': fieldnames
@@ -65,8 +78,11 @@ def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
     embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     docsearch = Chroma(persist_directory=persist_name,
                        embedding_function=embedding)
+
+    # method 1
     qa_chain = load_qa_chain(LLM, chain_type="stuff")
 
+    # method 2
     # template = """
     # QUESTION: {question}
     # =========
@@ -76,7 +92,6 @@ def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
     # """
     # PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
     # qa_chain = load_qa_with_sources_chain(LLM, chain_type="stuff", prompt=PROMPT)
-    # qa_chain = load_qa_with_sources_chain(LLM, chain_type="stuff")
 
     logger.info('get_qa_chain done.')
     return qa_chain, docsearch
@@ -140,10 +155,11 @@ def get_answer_with_documents(query: str, histories: list):
                                            fieldnames=['question', 'answer'])
 
         with get_openai_callback() as cb:
+            query = str(query).lower()
             score_query_docs = docsearch.similarity_search_with_score(query, k=3)
             token_use += get_token_cost(cb)
 
-        valid_docs = filter_docs(score_query_docs, 0.245)
+        valid_docs = filter_docs(score_query_docs, 0.235)
         if valid_docs:
             match_doc, doc_distance = valid_docs[0]
             match_content = match_doc.page_content
@@ -151,13 +167,16 @@ def get_answer_with_documents(query: str, histories: list):
                 result = match_content.split('answer:')[-1].strip()
 
         if not result:
-            valid_docs = filter_docs(score_query_docs, 0.35, is_shuffle=True)
+            valid_docs = filter_docs(score_query_docs, 0.33, is_shuffle=True)
             if valid_docs:
                 match_docs = [doc[0] for doc in valid_docs]
                 # match_doc, doc_distance = valid_docs[0]
                 with get_openai_callback() as cb:
+                    # method 1
                     result = qa_chain.run(input_documents=match_docs, question=query)
                     logger.info(result)
+
+                    # method 2
                     # response = qa_chain({"input_documents": match_docs, "question": query}, return_only_outputs=True)
                     # logger.info(response)
                     # result = response.get('output_text')
