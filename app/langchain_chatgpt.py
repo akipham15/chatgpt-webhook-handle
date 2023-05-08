@@ -65,17 +65,18 @@ def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
     embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     docsearch = Chroma(persist_directory=persist_name,
                        embedding_function=embedding)
-    # qa_chain = load_qa_chain(LLM, chain_type="stuff")
+    qa_chain = load_qa_chain(LLM, chain_type="stuff")
 
-    template = """
-    QUESTION: {question}
-    =========
-    {summaries}
-    =========
-    FINAL ANSWER:
-    """
-    PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
-    qa_chain = load_qa_with_sources_chain(LLM, chain_type="stuff", prompt=PROMPT)
+    # template = """
+    # QUESTION: {question}
+    # =========
+    # {summaries}
+    # =========
+    # FINAL ANSWER:
+    # """
+    # PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
+    # qa_chain = load_qa_with_sources_chain(LLM, chain_type="stuff", prompt=PROMPT)
+    # qa_chain = load_qa_with_sources_chain(LLM, chain_type="stuff")
 
     logger.info('get_qa_chain done.')
     return qa_chain, docsearch
@@ -155,10 +156,17 @@ def get_answer_with_documents(query: str, histories: list):
                 match_docs = [doc[0] for doc in valid_docs]
                 # match_doc, doc_distance = valid_docs[0]
                 with get_openai_callback() as cb:
-                    # result = qa_chain.run(input_documents=match_docs, question=query)
-                    result = qa_chain({"input_documents": match_docs, "question": query}, return_only_outputs=True)
+                    result = qa_chain.run(input_documents=match_docs, question=query)
                     logger.info(result)
-                    result = result.get('output_text')
+                    # response = qa_chain({"input_documents": match_docs, "question": query}, return_only_outputs=True)
+                    # logger.info(response)
+                    # result = response.get('output_text')
+
+                    if 'answer:' in result:
+                        result = result.split('answer:')[-1].strip()
+                    if 'SOURCES:' in result:
+                        result = result.split('SOURCES:')[0].strip()
+
                     token_use += get_token_cost(cb)
             else:
                 result = get_default_answer()
