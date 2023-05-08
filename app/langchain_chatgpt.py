@@ -23,19 +23,34 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0, max_tokens=1024)
 
 
-def create_persist_directory(train_path: str, persist_name: str, fieldnames=None):
-
-    # lowercase content
+def lower_train_file_question(train_path: str) -> str:
     location = os.path.dirname(train_path)
     filename = os.path.basename(train_path)
     lower_filename = f'lower_{filename}'
     lower_train_path = os.path.join(location, lower_filename)
 
-    with open(train_path, 'r') as file:
+    with open(train_path, 'r', encoding='utf-8-sig') as file:
+        csv_reader = csv.reader(file, delimiter=',', quotechar='"')
         with open(lower_train_path, 'w+') as lower_file:
-            for line in file:
-                lower_file.write(line.lower().strip() + "\n")
-                
+            csv_writer = csv.writer(lower_file, delimiter=',', quotechar='"')
+            # write csv file
+            for row in csv_reader:
+                question = row[0]
+                answer = row[1]
+
+                if question and answer:
+                    question = question.lower().strip()
+                    answer = answer.strip()
+                    csv_writer.writerow([question, answer])
+
+    logger.info('write lower csv file success.')
+    return lower_train_path
+
+
+def create_persist_directory(train_path: str, persist_name: str, fieldnames=None):
+
+    # lowercase content
+    lower_train_path = lower_train_file_question(train_path)
 
     if not fieldnames:
         fieldnames = []
@@ -46,8 +61,8 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
         'quotechar': '"',
         'fieldnames': fieldnames
     },
-                       # source_column='answer',
-                       )
+        # source_column='answer',
+    )
 
     # text_splitter = CharacterTextSplitter(chunk_overlap=70, chunk_size=1000, separator="\n\n\n")
     # loader = DirectoryLoader("./data/fpt/", glob="**/*.txt", loader_cls=TextLoader)
@@ -156,7 +171,8 @@ def get_answer_with_documents(query: str, histories: list):
 
         with get_openai_callback() as cb:
             query = str(query).lower()
-            score_query_docs = docsearch.similarity_search_with_score(query, k=3)
+            score_query_docs = docsearch.similarity_search_with_score(
+                query, k=3)
             token_use += get_token_cost(cb)
 
         valid_docs = filter_docs(score_query_docs, 0.235)
@@ -173,7 +189,8 @@ def get_answer_with_documents(query: str, histories: list):
                 # match_doc, doc_distance = valid_docs[0]
                 with get_openai_callback() as cb:
                     # method 1
-                    result = qa_chain.run(input_documents=match_docs, question=query)
+                    result = qa_chain.run(
+                        input_documents=match_docs, question=query)
                     logger.info(result)
 
                     # method 2
