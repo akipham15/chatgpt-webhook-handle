@@ -1,22 +1,23 @@
+import csv
 import os
 import random
 
 from dotenv import load_dotenv
-from langchain import OpenAI
+from langchain import OpenAI, PromptTemplate, LLMChain
+from langchain.llms import OpenAIChat
 from langchain.callbacks import get_openai_callback
+from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.question_answering import load_qa_chain
-from langchain.chains.qa_with_sources import load_qa_with_sources_chain
-from langchain.prompts import PromptTemplate
-
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from logzero import logger
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
 
 from app import constants
 from app.config import Config
-import csv
 
 load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
@@ -48,7 +49,6 @@ def lower_train_file_question(train_path: str) -> str:
 
 
 def create_persist_directory(train_path: str, persist_name: str, fieldnames=None):
-
     # lowercase content
     lower_train_path = lower_train_file_question(train_path)
 
@@ -61,8 +61,8 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
         'quotechar': '"',
         'fieldnames': fieldnames
     },
-        # source_column='answer',
-    )
+                       # source_column='answer',
+                       )
 
     # text_splitter = CharacterTextSplitter(chunk_overlap=70, chunk_size=1000, separator="\n\n\n")
     # loader = DirectoryLoader("./data/fpt/", glob="**/*.txt", loader_cls=TextLoader)
@@ -112,14 +112,6 @@ def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
     return qa_chain, docsearch
 
 
-def get_chat_history(inputs) -> str:
-    res = []
-    for human, ai in inputs:
-        res.append(f"Human:{human}")
-        res.append(f"AI:{ai}")
-    return "\n".join(res)
-
-
 def get_token_cost(callback):
     print(f"Total Tokens: {callback.total_tokens}")
     print(f"Prompt Tokens: {callback.prompt_tokens}")
@@ -148,6 +140,31 @@ def filter_docs(source_docs: list, distance, is_shuffle=False, k=20):
     return valid_docs
 
 
+def generate_answer(query: str, histories: list):
+    logger.info(histories)
+    template = """You are a chatbot having a conversation with a human.
+
+    {chat_history}
+    Human: {human_input}
+    Chatbot:"""
+
+    prompt_with_history = PromptTemplate(
+        input_variables=["chat_history", "human_input"],
+        template=template
+    )
+    # memory = ConversationBufferMemory(memory_key="chat_history")
+    llm_chain = LLMChain(
+        llm=OpenAIChat(temperature=0.6, model="gpt-3.5-turbo"),
+        prompt=prompt_with_history,
+        verbose=True,
+    )
+
+    histories_string = '\n'.join(histories)
+    result = llm_chain.predict(chat_history=histories_string, human_input=query)
+    logger.info(result)
+    return result
+
+
 def get_answer_with_documents(query: str, histories: list):
     if histories is None:
         histories = []
@@ -171,11 +188,10 @@ def get_answer_with_documents(query: str, histories: list):
 
         with get_openai_callback() as cb:
             query = str(query).lower()
-            score_query_docs = docsearch.similarity_search_with_score(
-                query, k=3)
+            score_query_docs = docsearch.similarity_search_with_score(query, k=3)
             token_use += get_token_cost(cb)
 
-        valid_docs = filter_docs(score_query_docs, 0.235)
+        valid_docs = filter_docs(score_query_docs, 0.20)
         if valid_docs:
             match_doc, doc_distance = valid_docs[0]
             match_content = match_doc.page_content
@@ -183,7 +199,7 @@ def get_answer_with_documents(query: str, histories: list):
                 result = match_content.split('answer:')[-1].strip()
 
         if not result:
-            valid_docs = filter_docs(score_query_docs, 0.33, is_shuffle=True)
+            valid_docs = filter_docs(score_query_docs, 0.25, is_shuffle=True)
             if valid_docs:
                 match_docs = [doc[0] for doc in valid_docs]
                 # match_doc, doc_distance = valid_docs[0]
@@ -205,7 +221,10 @@ def get_answer_with_documents(query: str, histories: list):
 
                     token_use += get_token_cost(cb)
             else:
-                result = get_default_answer()
+                # result = get_default_answer()
+                with get_openai_callback() as cb:
+                    result = generate_answer(query, histories)
+                    token_use += get_token_cost(cb)
 
         log_content['valid_docs'] = valid_docs
     else:

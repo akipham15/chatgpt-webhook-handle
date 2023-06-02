@@ -25,7 +25,7 @@ class BaseConfig(object):
 class Config(BaseConfig):
     LIMIT_MESSAGE_TOKEN = 256
     LIMIT_MESSAGE_EXPIRE = 60 * 60 * 24
-    LIMIT_MESSAGE_NUMBER = 10000
+    LIMIT_MESSAGE_NUMBER = 100000
 
     DEFAULT_QUERY_DISTANCE = 0.29
 

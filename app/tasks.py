@@ -17,9 +17,16 @@ def add_together(a: int, b: int) -> int:
     return a + b
 
 
+def get_chat_history(inputs) -> str:
+    res = []
+    for human, ai in inputs:
+        res.append(f"Human:{human}")
+        res.append(f"Chatbot:{ai}")
+    return "\n".join(res)
+
+
 def langchain_get_chat_from_user(email=None, num_of_history: int = 2):
-    user_chats = Chat.objects(email=str(email)).order_by(
-        '-created')[:num_of_history]
+    user_chats = Chat.objects(email=str(email)).order_by('-created')[:num_of_history]
     chats = []
 
     if user_chats:
@@ -27,15 +34,17 @@ def langchain_get_chat_from_user(email=None, num_of_history: int = 2):
             if doc.input in constants.EXCEPT_TEXT:
                 break
             else:
-                history = (doc.input, doc.response)
-                chats.append(history)
+                human = doc.input
+                ai = doc.response
+                chats.append(f"Chatbot: {ai}")
+                chats.append(f"Human: {human}")
 
     return chats[::-1]
 
 
 @celery_app.task(bind=True, name="get_answer_from_chain", time_limit=360, max_retries=6, ignore_result=True)
 @rate_limit(name='get_answer_from_chain', expire=60, limit=400)
-def get_answer_from_chain(self, email: str, message: str, use_histories=False):
+def get_answer_from_chain(self, email: str, message: str, use_histories=False, history_length=3):
     log_content = {
         'action': 'webhook_answer',
         'email': email,
@@ -46,8 +55,7 @@ def get_answer_from_chain(self, email: str, message: str, use_histories=False):
     if not message in constants.EXCEPT_TEXT:
         histories = []
         if use_histories:
-            histories = langchain_get_chat_from_user(
-                email=email, num_of_history=1)
+            histories = langchain_get_chat_from_user(email=email, num_of_history=history_length)
             logger.info(histories)
 
         answer, token_use = get_answer_with_documents(message, histories)
