@@ -23,6 +23,8 @@ def retrain():
     if persist_directory_existed:
         logger.info(f'remove persist_directory {persist_name}')
         shutil.rmtree(persist_name)
+        logger.info(f'create persist_directory {persist_name}')
+        create_persist_directory(train_path, persist_name, fieldnames)
     else:
         logger.info(f'create persist_directory {persist_name}')
         create_persist_directory(train_path, persist_name, fieldnames)
