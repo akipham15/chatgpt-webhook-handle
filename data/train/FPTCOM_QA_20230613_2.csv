@@ -1,4 +1,4 @@
-﻿hello,Xin chàoo,
+hello,Xin chàoo,
 xin chào,chao xìn,
 chào bạn,xin chào,
 hi,hii fpt,
@@ -53,7 +53,6 @@ Cấu trúc các thư mục trong email mới có giống với email cũ không
 Những hệ thống sử dụng email cũ có hoạt động với email mới hay không ?,"Với các ứng dụng đã hoàn tất chuyển đổi xác thực, người dùng sử dụng account mới để đăng nhập. Các ứng dụng chưa hoàn tất chuyển đổi vui lòng đăng nhập bằng account cũ. Danh sách các ứng dựng có thể đăng nhập bằng account FPT.COM cập nhật tại đây https://portal.fpt.com.vn/",
 Cho em hỏi có cập nhật lại số thứ tự trong email không ạ?,Trong đợt chuyển đổi domain FPT.COM lần này có khoảng 3% email sẽ bị thay đổi số thứ tự do bị trùng giữa các CTTV. Việc này đã được Ban Nhân sự và Ban CNTT của tập đoàn thống nhất. Thông tin chính thức FTEL.FHR sẽ gửi cho bạn khi bàn giao account mới.,
 Việc chuyển đổi có bị mất email cũ không?,"Các email của năm 2023 sẽ được hệ thống tự động chuyển trước để người dùng thuận tiện làm việc. Các email của những năm trước sẽ được chuyển dần trong 2 tháng tiếp theo. Trong thời gian chuyển đổi, người dùng có thể login vào account cũ để xem lại các email chưa được chuyển và gửi email từ địa chỉ cũ nếu cần. Phần Calendar và Rules filter email người dùng phải chủ động tạo lại từ đầu.",
-VPN sẽ đăng nhập bằng account nào nhỉ?,"Việc login VPN bằng account fpt.com hiện tại chưa sẵn sàng, vui lòng đăng nhập VPN bằng account cũ cho đến khi có thông báo mới.",
 Khi gặp lỗi cấu hình thì cần làm gì?,"Vui lòng cung cấp thông tin cụ thể hơn. Khó khăn bạn gặp phải là gì? Ví dụ không đổi được mật khẩu, không gửi được email, không login được Workchat...",
 Có hướng dẫn sử dụng Workspace không các anh?,Bạn muốn nói đến Google Workspace? Hiện tại chưa có hướng dẫn nhưng sử dụng cũng đơn giản như dùng Gmail bình thường thôi bạn.,
 Có hướng dẫn sử dụng Workschat/workplace không các anh?,"Hướng dẫn login Workplace/Workchat bằng account mới:
@@ -74,7 +73,6 @@ https://login.microsoftonline.com/logout.srf",
 Tại sao có email tôi đã thả vào thư mục rồi mà nó vẫn nằm ở chỗ khác?,"Cấu trúc thư mục được giữ nguyên. Tuy nhiên nếu trong thời gian chuyển đổi, người dùng thay đổi cấu trúc thư mục trên account cũ, hệ thống có thể không cập nhật được.",
 Dung lượng lưu trữ trên email mới của tôi là bao nhiêu?,Dung lượng lưu trữ trên email mới tương đương với dung lượng trên email cũ,
 Những dịch vụ nào sẽ bị ảnh hưởng sau khi chuyển email ?,Tất cả những dịch vụ có sử dụng email làm phương thức xác thực đều sẽ bị ảnh hưởng bởi việc chuyển đổi này. ,
-"Tôi không đăng nhập được vào VPN bằng account mới, làm thế nào bây giờ","Việc login VPN bằng account fpt.com hiện tại chưa sẵn sàng, vui lòng đăng nhập VPN bằng account cũ cho đến khi có thông báo mới.",
 Khi có thắc mắc thì gặp ai trả lời?,"Vui lòng cung cấp thông tin cụ thể hơn. Khó khăn bạn gặp phải là gì? Ví dụ không đổi được mật khẩu, không gửi được email, không login được Workchat...",
 "Filter Rule mail, và các thư mục có bị mất không các anh !? Nếu mất thì ntn ạ","Các email năm 2023 sẽ được chuyển trước để người dùng thuận tiện làm việc. Email trước đó sẽ được chuyển dần trong 2 tháng tiếp theo. Trong thời gian chuyển đổi, người dùng có thể login vào account cũ để tra lại các mail chưa được chuyển. Phần calendar và rule mail người dùng chủ động tạo lại từ đầu.",
 "Tôi bị đổi tên, login vào inside có đổi theo không?",Inside không sử dụng account email để xác thực nên không bị ảnh hưởng.,
@@ -210,7 +208,6 @@ Google Workspace là gì,"Google Workspace là một nền tảng office mới c
 "các công cụ đó dùng không được tốt như Office365, tại sao tôi phải xài","Việc thử nghiệm sử dụng Google Workspace là cơ sở để ban điều hành quyết định có chuyển đổi toàn bộ sang sử dụng nền tảng office mới trên Google Workspace hay không. Vì vậy đề nghị mọi người sử dụng hệ thống mới ngay sau khi được cấp account. Nếu bạn không thuộc khối công nghệ hạ tầng, hoặc không nằm trong danh sách nhận ""Thông báo về việc thử nghiệm sử dụng Google Workspace"" vui lòng mở ticket tại https://ssc.fpt.net/secure/SSC01CreateTicket.jspa?processId=332&catalogId=11 để được hỗ trợ.",
 tôi có phải là đối tượng được chuyển đổi không,"Khối công nghệ hạ tầng, FHR, FCC, FTC của FPT Telecom sẽ tiên phong chuyển đổi thử nghiệm từ Office 365 sang Google Workspace. Việc sử dụng Google Workspace là cơ sở để ban điều hành quyết định có chuyển đổi toàn bộ sang sử dụng nền tảng office mới trên Google hay không. Vì vậy đề nghị mọi người sử dụng hệ thống mới ngay sau khi được cấp account.",
 tôi không rõ như thế nào là email của năm 2023,Email của năm 2023 là những email được gửi/nhận tính từ ngày 1/1/2023 đến hiện tại. Những email này sẽ được chuyển trước sang account fpt.com trước. Những email từ ngày 1/1/2023 trở về trước sẽ được chuyển sang account fpt.com sau khi account mới đã được bàn giao đến anh/chị.,
-Các ứng dụng hiện tại đang không đăng nhập được trong đó có VPN?,"Việc login VPN bằng account fpt.com hiện tại chưa sẵn sàng, vui lòng đăng nhập VPN bằng account cũ cho đến khi có thông báo mới.",
 làm thế nào để chuyển dữ liệu sharepoint?,"Các site Sharepoint sẽ không được chuyển đổi dữ liệu tự động. Admin của site cần chủ động thực hiện backup/restore dữ liệu sang site Sharepoint mới. Hướng dẫn chi tiết chuyển đổi Sharepoint, vui lòng xem ở đây: https://foxnews.fpt.vn/huong-dan-sao-luu-va-dong-bo-du-lieu-cong-cu-sharepoint/ Trong thời gian chưa chuyển đổi, người dùng tiếp tục dùng tài khoản cũ (@fpt.com.vn) để truy cập vào Sharepoint. Admin của các site Sharepoint có dữ liệu lớn cần hỗ trợ chuyển đổi có thể liên hệ bộ phận IT để được giúp đỡ.",
 Tôi muốn logout ra khỏi single sign on thì làm thế nào?," Truy cập link sau (lưu ý: trên iPhone phải dùng Safari, trên Android dùng trình duyệt mặc định) để sign-out khỏi account cũ (fpt.com.vn) và đăng nhập lại bằng account mới
 https://login.microsoftonline.com/logout.srf",
@@ -529,4 +526,5 @@ Tôi muốn phân quyền truy cập VPN tổng đài mở rộng (TĐMR),"Để
 + Subject: VPN - phân quyền sử dụng tổng đài Cloud Call Center
 - Trường hợp chưa có account VPN cần đề nghị cấp account VPN, chi nhánh tạo yêu cầu trên SSC với:
 + Loại yêu cầu: Cấp account VPN
-+ Lưu ý ghi chú: VPN - phân quyền sử dụng tổng đài Cloud Call Center","  Để được cấp account VPN, bạn phải gửi ticket trên hệ thống ssc.fpt.net."," bạn trả lời sai mất rồi. bạn không thể đăng ký account fpt.com miễn phí mà phải thông qua ban nhân sự ftel thì mới được cấp account. sau khi được cấp account mail fpt.com, bạn phải gửi ticket trên hệ thống ssc.fpt.net để xin cấpaccount vpn thì mới được phân quyền truy cập vpn."
++ Lưu ý ghi chú: VPN - phân quyền sử dụng tổng đài Cloud Call Center",
+Tôi chưa có account VPN thì phải làm thế nào?,"Để được cấp account VPN, bạn phải gửi ticket trên hệ thống ssc.fpt.net, mục Dịch vụ IT -> Account VPN -> Cấp Account VPN. Sau khi ticket hoàn thành thì bạn mới được phân quyền và có thể truy cập VPN.",

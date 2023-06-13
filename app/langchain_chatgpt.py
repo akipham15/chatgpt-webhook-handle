@@ -18,7 +18,7 @@ from app.config import Config
 
 load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0, max_tokens=1024)
+LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0.1, max_tokens=1024)
 
 
 def lower_train_file_question(train_path: str) -> str:
@@ -57,9 +57,7 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
         'delimiter': ',',
         'quotechar': '"',
         'fieldnames': fieldnames
-    },
-                       # source_column='answer',
-                       )
+    })
 
     # text_splitter = CharacterTextSplitter(chunk_overlap=70, chunk_size=1000, separator="\n\n\n")
     # loader = DirectoryLoader("./data/fpt/", glob="**/*.txt", loader_cls=TextLoader)
@@ -74,7 +72,9 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
 
     embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     docsearch = Chroma.from_documents(
-        documents=docs, embedding=embedding, persist_directory=persist_name)
+        documents=docs,
+        embedding=embedding,
+        persist_directory=persist_name)
     # texts = text_splitter.split_text(documents)
     # docsearch = Chroma.from_texts(texts, embedding=embedding, persist_directory=PERSIST_DIRECTORY)
     docsearch.persist()
@@ -157,9 +157,29 @@ def generate_answer(query: str, histories: list):
     )
 
     histories_string = '\n'.join(histories)
-    result = llm_chain.predict(chat_history=histories_string, human_input=query)
+    result = llm_chain.predict(
+        chat_history=histories_string, human_input=query)
     logger.info(result)
     return result
+
+
+def update_csv(histories):
+    from csv import writer
+
+    with open(Config.QA_TRAIN_DATA_PATH, 'a') as file:
+        csv_writer = writer(file)
+        row = histories[-2:]
+        row = [item.replace('Chatbot:', '').replace('Human:', '') for item in row]
+        csv_writer.writerow(row)
+        logger.info('Update csv done.')
+
+
+def update_docsearch(docsearch, histories):
+    train_query = '\n'.join(histories)
+    logger.info(f'train query: {train_query}')
+    update_csv(histories)
+    docsearch.add_texts(histories)
+    logger.info('update done.')
 
 
 def get_answer_with_documents(query: str, histories: list):
@@ -185,15 +205,21 @@ def get_answer_with_documents(query: str, histories: list):
 
         with get_openai_callback() as cb:
             query = str(query).lower()
-            score_query_docs = docsearch.similarity_search_with_score(query, k=3)
+            score_query_docs = docsearch.similarity_search_with_score(
+                query, k=3)
             token_use += get_token_cost(cb)
 
-        valid_docs = filter_docs(score_query_docs, 0.20)
+        valid_docs = filter_docs(score_query_docs, 0.21)
         if valid_docs:
             match_doc, doc_distance = valid_docs[0]
             match_content = match_doc.page_content
             if 'answer:' in match_content:
                 result = match_content.split('answer:')[-1].strip()
+
+        if query.startswith('/train'):
+            logger.info('train data')
+            histories.append(query.replace('/train', 'Human:'))
+            update_docsearch(docsearch, histories)
 
         if not result:
             valid_docs = filter_docs(score_query_docs, 0.25, is_shuffle=True)
@@ -217,11 +243,13 @@ def get_answer_with_documents(query: str, histories: list):
                         result = result.split('SOURCES:')[0].strip()
 
                     token_use += get_token_cost(cb)
+                result = f'{result}\n{constants.RESPONSE_POSFIX}'
             else:
                 # result = get_default_answer()
                 with get_openai_callback() as cb:
                     result = generate_answer(query, histories)
                     token_use += get_token_cost(cb)
+                result = f'{result}\n{constants.RESPONSE_POSFIX}'
 
         log_content['valid_docs'] = valid_docs
     else:

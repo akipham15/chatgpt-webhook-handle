@@ -146,5 +146,5 @@ def handle_text_and_get_answer(email, message_text):
 
 
 if __name__ == "__main__":
-    get_answer_with_documents('hello', [])
-    # app.run(host='127.0.0.1')
+    # get_answer_with_documents('hello', [])
+    app.run(host='127.0.0.1')
