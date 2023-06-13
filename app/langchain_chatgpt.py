@@ -4,17 +4,14 @@ import random
 
 from dotenv import load_dotenv
 from langchain import OpenAI, PromptTemplate, LLMChain
-from langchain.llms import OpenAIChat
 from langchain.callbacks import get_openai_callback
-from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.llms import OpenAIChat
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from logzero import logger
-from langchain.chains import ConversationChain
-from langchain.memory import ConversationBufferMemory
 
 from app import constants
 from app.config import Config
@@ -242,7 +239,7 @@ def main():
     while True:
         print("\nInput question: ")
         query = input()
-        result = get_answer_with_documents(query)
+        result = get_answer_with_documents(query, [])
         print(result)
 
 

@@ -11,7 +11,7 @@ from app import constants
 from app.chatgpt import get_answer_old, get_answer
 from app.config import Config
 from app.extensions import create_app
-from app.langchain_chatgpt import get_default_answer
+from app.langchain_chatgpt import get_default_answer, get_answer_with_documents
 from app.libs.rate_limits import ChatLimit
 from app.models import Chat
 from app.tasks import get_answer_from_chain
@@ -146,4 +146,5 @@ def handle_text_and_get_answer(email, message_text):
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1')
+    get_answer_with_documents('hello', [])
+    # app.run(host='127.0.0.1')
