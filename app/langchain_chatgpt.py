@@ -3,9 +3,10 @@ import os
 import random
 
 from dotenv import load_dotenv
-from langchain import OpenAI, PromptTemplate, LLMChain
+from langchain import PromptTemplate, LLMChain
 from langchain.callbacks import get_openai_callback
 from langchain.chains.question_answering import load_qa_chain
+from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.llms import OpenAIChat
@@ -15,10 +16,13 @@ from logzero import logger
 
 from app import constants
 from app.config import Config
+from app.libs.chatgptapi import get_answer_from_chatgpt
+from app.libs.utils import langchain_get_chat_from_user
 
 load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0.1, max_tokens=1024)
+# LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0.1, max_tokens=1024)
+LLM = ChatOpenAI(model_name=constants.OPENAI_MODEL_NAME, temperature=0.1)
 
 
 def lower_train_file_question(train_path: str) -> str:
@@ -182,7 +186,7 @@ def update_docsearch(docsearch, histories):
     logger.info('update done.')
 
 
-def get_answer_with_documents(query: str, histories: list):
+def get_answer_with_documents(query: str, histories: list, email=None):
     if histories is None:
         histories = []
 
@@ -247,8 +251,12 @@ def get_answer_with_documents(query: str, histories: list):
             else:
                 # result = get_default_answer()
                 with get_openai_callback() as cb:
-                    result = generate_answer(query, histories)
-                    token_use += get_token_cost(cb)
+                    # result = generate_answer(query, histories)
+                    # token_use += get_token_cost(cb)
+                    histories = langchain_get_chat_from_user(email=email, num_of_history=5, use_object_format=True)
+                    result, cost = get_answer_from_chatgpt(api_token=OPENAI_API_KEY, histories=histories)
+
+                    token_use += cost
                 result = f'{result}\n{constants.RESPONSE_POSFIX}'
 
         log_content['valid_docs'] = valid_docs

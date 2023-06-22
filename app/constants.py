@@ -18,3 +18,5 @@ MIN_DOCS = 1
 PERSIST_DIRECTORY_FPT_EXCHANGE = "fpt-mail-exchange"
 PERSIST_DIRECTORY_FPT_WELCOME = "fpt-welcome"
 RESPONSE_POSFIX = '_(Câu trả lời mang tính chất tham khảo)_'
+
+OPENAI_MODEL_NAME = 'gpt-3.5-turbo'

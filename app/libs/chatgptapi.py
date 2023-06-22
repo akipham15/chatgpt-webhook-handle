@@ -1,7 +1,9 @@
-import requests
-import json
-from logzero import logger
 from datetime import datetime, timedelta
+
+import requests
+from logzero import logger
+
+from app import constants
 
 
 def check_credit_usage_by_date(api_token):
@@ -49,6 +51,14 @@ def get_credit_usage(api_token):
             logger.info(fund_remain)
     else:
         logger.info(response.text)
+
+
+def get_answer_from_chatgpt(api_token: str, histories: list):
+    import openai
+
+    openai.api_key = api_token
+    completion = openai.ChatCompletion.create(model=constants.OPENAI_MODEL_NAME, messages=histories)
+    return completion.choices[0].message.content, completion.usage.total_tokens
 
 
 def main():

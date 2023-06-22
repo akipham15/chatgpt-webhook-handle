@@ -8,38 +8,13 @@ from app.config import Config
 from app.extensions import celery_app
 from app.langchain_chatgpt import get_answer_with_documents
 from app.libs.rate_limits import ChatLimit, rate_limit
-from app.libs.utils import send_facebook_message
+from app.libs.utils import send_facebook_message, langchain_get_chat_from_user
 from app.models import Chat
 
 
 @celery_app.task(name="add_together")
 def add_together(a: int, b: int) -> int:
     return a + b
-
-
-def get_chat_history(inputs) -> str:
-    res = []
-    for human, ai in inputs:
-        res.append(f"Human:{human}")
-        res.append(f"Chatbot:{ai}")
-    return "\n".join(res)
-
-
-def langchain_get_chat_from_user(email=None, num_of_history: int = 2):
-    user_chats = Chat.objects(email=str(email)).order_by('-created')[:num_of_history]
-    chats = []
-
-    if user_chats:
-        for doc in user_chats:
-            if doc.input in constants.EXCEPT_TEXT:
-                break
-            else:
-                human = doc.input
-                ai = doc.response
-                chats.append(f"Chatbot: {ai}")
-                chats.append(f"Human: {human}")
-
-    return chats[::-1]
 
 
 @celery_app.task(bind=True, name="get_answer_from_chain", time_limit=360, max_retries=6, ignore_result=True)
@@ -58,7 +33,7 @@ def get_answer_from_chain(self, email: str, message: str, use_histories=False, h
             histories = langchain_get_chat_from_user(email=email, num_of_history=history_length)
             logger.info(histories)
 
-        answer, token_use = get_answer_with_documents(message, histories)
+        answer, token_use = get_answer_with_documents(message, histories, email=email)
         chat_result = Chat(
             email=str(email),
             input=str(message),
