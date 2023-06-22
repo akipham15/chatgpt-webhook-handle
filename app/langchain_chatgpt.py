@@ -213,7 +213,8 @@ def get_answer_with_documents(query: str, histories: list, email=None):
                 query, k=3)
             token_use += get_token_cost(cb)
 
-        valid_docs = filter_docs(score_query_docs, 0.21)
+        # logger.info(score_query_docs)
+        valid_docs = filter_docs(score_query_docs, 0.22)
         if valid_docs:
             match_doc, doc_distance = valid_docs[0]
             match_content = match_doc.page_content
@@ -226,7 +227,7 @@ def get_answer_with_documents(query: str, histories: list, email=None):
             update_docsearch(docsearch, histories)
 
         if not result:
-            valid_docs = filter_docs(score_query_docs, 0.25, is_shuffle=True)
+            valid_docs = filter_docs(score_query_docs, 0.28, is_shuffle=True)
             if valid_docs:
                 match_docs = [doc[0] for doc in valid_docs]
                 # match_doc, doc_distance = valid_docs[0]
@@ -247,16 +248,20 @@ def get_answer_with_documents(query: str, histories: list, email=None):
                         result = result.split('SOURCES:')[0].strip()
 
                     token_use += get_token_cost(cb)
-                result = f'{result}\n{constants.RESPONSE_POSFIX}'
+                result = f'{result}\n{constants.RESPONSE_POSFIX_DOC_REFERENCE}'
             else:
                 # result = get_default_answer()
-                with get_openai_callback() as cb:
+                # with get_openai_callback() as cb:
                     # result = generate_answer(query, histories)
                     # token_use += get_token_cost(cb)
-                    histories = langchain_get_chat_from_user(email=email, num_of_history=5, use_object_format=True)
-                    result, cost = get_answer_from_chatgpt(api_token=OPENAI_API_KEY, histories=histories)
 
-                    token_use += cost
+                # get answer from chatgpt
+                histories = langchain_get_chat_from_user(email=email, num_of_history=3, use_object_format=True)
+                query_object = {"role": "user", "content": query}
+                histories.append(query_object)
+                result, cost = get_answer_from_chatgpt(api_token=OPENAI_API_KEY, histories=histories)
+
+                token_use += cost
                 result = f'{result}\n{constants.RESPONSE_POSFIX}'
 
         log_content['valid_docs'] = valid_docs

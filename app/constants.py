@@ -17,6 +17,7 @@ EXCEPT_TEXT = ['/new']
 MIN_DOCS = 1
 PERSIST_DIRECTORY_FPT_EXCHANGE = "fpt-mail-exchange"
 PERSIST_DIRECTORY_FPT_WELCOME = "fpt-welcome"
-RESPONSE_POSFIX = '_(Câu trả lời mang tính chất tham khảo)_'
+RESPONSE_POSFIX_DOC_REFERENCE = '\n_(Câu trả lời dựa trên một số tài liệu liên quan)_'
+RESPONSE_POSFIX = '\n_(Câu trả lời mang tính chất tham khảo)_'
 
 OPENAI_MODEL_NAME = 'gpt-3.5-turbo'

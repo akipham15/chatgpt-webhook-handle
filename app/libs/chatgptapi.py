@@ -58,6 +58,7 @@ def get_answer_from_chatgpt(api_token: str, histories: list):
 
     openai.api_key = api_token
     completion = openai.ChatCompletion.create(model=constants.OPENAI_MODEL_NAME, messages=histories)
+    logger.info(histories)
     return completion.choices[0].message.content, completion.usage.total_tokens
 
 

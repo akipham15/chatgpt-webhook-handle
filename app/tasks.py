@@ -31,7 +31,7 @@ def get_answer_from_chain(self, email: str, message: str, use_histories=False, h
         histories = []
         if use_histories:
             histories = langchain_get_chat_from_user(email=email, num_of_history=history_length)
-            logger.info(histories)
+            # logger.info(histories)
 
         answer, token_use = get_answer_with_documents(message, histories, email=email)
         chat_result = Chat(

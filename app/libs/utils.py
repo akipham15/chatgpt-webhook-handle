@@ -44,7 +44,7 @@ def langchain_get_chat_from_user(email=None, num_of_history: int = 2, use_object
                 human = doc.input
                 ai = doc.response
                 if use_object_format:
-                    chats.append({"role": "assistant", "content": ai})
+                    # chats.append({"role": "assistant", "content": ai})
                     chats.append({"role": "user", "content": human})
                 else:
                     chats.append(f"Chatbot: {ai}")
