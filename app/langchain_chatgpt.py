@@ -22,7 +22,7 @@ from app.libs.utils import langchain_get_chat_from_user
 load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 # LLM = OpenAI(batch_size=constants.MIN_DOCS + 2, temperature=0.1, max_tokens=1024)
-LLM = ChatOpenAI(model_name=constants.OPENAI_MODEL_NAME, temperature=0.1)
+LLM = ChatOpenAI(model_name=constants.OPENAI_MODEL_NAME, temperature=0)
 
 
 def lower_train_file_question(train_path: str) -> str:
@@ -170,19 +170,32 @@ def generate_answer(query: str, histories: list):
 def update_csv(histories):
     from csv import writer
 
-    with open(Config.QA_TRAIN_DATA_PATH, 'a') as file:
+    with open(Config.CUSTOM_TRAIN_DATA_PATH, 'a+') as file:
         csv_writer = writer(file)
         row = histories[-2:]
-        row = [item.replace('Chatbot:', '').replace('Human:', '') for item in row]
+        row = [item.replace('Chatbot:', '').replace('Human:', '').replace('question:', '').replace(
+            'answer:', '').strip() for item in row]
         csv_writer.writerow(row)
         logger.info('Update csv done.')
 
 
 def update_docsearch(docsearch, histories):
-    train_query = '\n'.join(histories)
+    train_data = []
+    for item in histories:
+        content = item.get('content')
+        if item.get('role') == 'user':
+            question = f'question: {content}'
+            if not content.endswith('?'):
+                question = f'{question} ?'
+            train_data.append(question)
+        if item.get('role') == 'assistant':
+            answer = f'answer: {content}'
+            train_data.append(answer)
+
+    train_query = '\n'.join(train_data)
     logger.info(f'train query: {train_query}')
-    update_csv(histories)
-    docsearch.add_texts(histories)
+    update_csv(train_data)
+    docsearch.add_texts(train_data)
     logger.info('update done.')
 
 
@@ -221,10 +234,15 @@ def get_answer_with_documents(query: str, histories: list, email=None):
             if 'answer:' in match_content:
                 result = match_content.split('answer:')[-1].strip()
 
-        if query.startswith('/train'):
+        if query.startswith('/train') and email in Config.PERMISSION_USERS:
             logger.info('train data')
-            histories.append(query.replace('/train', 'Human:'))
+            histories = langchain_get_chat_from_user(email=email, num_of_history=1, use_object_format=True)
+            query_object = {"role": "assistant", "content": query.replace('/train', '')}
+            histories.append(query_object)
             update_docsearch(docsearch, histories)
+
+            result = 'Train done.'
+            return result, token_use
 
         if not result:
             valid_docs = filter_docs(score_query_docs, 0.28, is_shuffle=True)
@@ -252,8 +270,8 @@ def get_answer_with_documents(query: str, histories: list, email=None):
             else:
                 # result = get_default_answer()
                 # with get_openai_callback() as cb:
-                    # result = generate_answer(query, histories)
-                    # token_use += get_token_cost(cb)
+                # result = generate_answer(query, histories)
+                # token_use += get_token_cost(cb)
 
                 # get answer from chatgpt
                 histories = langchain_get_chat_from_user(email=email, num_of_history=3, use_object_format=True)
