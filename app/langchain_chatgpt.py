@@ -25,16 +25,17 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 LLM = ChatOpenAI(model_name=constants.OPENAI_MODEL_NAME, temperature=0)
 
 
-def lower_train_file_question(train_path: str) -> str:
-    location = os.path.dirname(train_path)
-    filename = os.path.basename(train_path)
-    lower_filename = f'lower_{filename}'
-    lower_train_path = os.path.join(location, lower_filename)
+def recreate_training_file(train_path, output_path, is_new=False):
+    logger.info(f'recreate_training_file from: {train_path}')
+    write_mode = 'a'
+    if is_new:
+        write_mode = 'w+'
 
+    logger.info(f'write_mode: {write_mode}')
     with open(train_path, 'r', encoding='utf-8-sig') as file:
         csv_reader = csv.reader(file, delimiter=',', quotechar='"')
-        with open(lower_train_path, 'w+') as lower_file:
-            csv_writer = csv.writer(lower_file, delimiter=',', quotechar='"')
+        with open(output_path, write_mode) as output_file:
+            csv_writer = csv.writer(output_file, delimiter=',', quotechar='"')
             # write csv file
             for row in csv_reader:
                 question = row[0]
@@ -45,22 +46,37 @@ def lower_train_file_question(train_path: str) -> str:
                     answer = answer.strip()
                     csv_writer.writerow([question, answer])
 
+            output_file.close()
+        file.close()
+
+    logger.info('recreate_training_file done.')
+
+
+def lower_train_file_question() -> str:
+    train_path = Config.QA_TRAIN_DATA_PATH
+    custom_train_path = Config.CUSTOM_TRAIN_DATA_PATH
+
+    location = os.path.dirname(train_path)
+    filename = os.path.basename(Config.QA_TRAIN_DATA_PATH)
+    lower_filename = f'lower_{filename}'
+    lower_train_path = os.path.join(location, lower_filename)
+
+    recreate_training_file(train_path, lower_train_path, is_new=True)
+    recreate_training_file(custom_train_path, lower_train_path)
+
     logger.info('write lower csv file success.')
     return lower_train_path
 
 
-def create_persist_directory(train_path: str, persist_name: str, fieldnames=None):
+def create_persist_directory():
     # lowercase content
-    lower_train_path = lower_train_file_question(train_path)
-
-    if not fieldnames:
-        fieldnames = []
+    lower_train_path = lower_train_file_question()
 
     # loader = TextLoader(lower_train_path)
     loader = CSVLoader(file_path=lower_train_path, csv_args={
         'delimiter': ',',
         'quotechar': '"',
-        'fieldnames': fieldnames
+        'fieldnames': ['question', 'answer']
     })
 
     # text_splitter = CharacterTextSplitter(chunk_overlap=70, chunk_size=1000, separator="\n\n\n")
@@ -78,22 +94,19 @@ def create_persist_directory(train_path: str, persist_name: str, fieldnames=None
     docsearch = Chroma.from_documents(
         documents=docs,
         embedding=embedding,
-        persist_directory=persist_name)
+        persist_directory=constants.PERSIST_DIRECTORY_FPT_EXCHANGE)
     # texts = text_splitter.split_text(documents)
     # docsearch = Chroma.from_texts(texts, embedding=embedding, persist_directory=PERSIST_DIRECTORY)
     docsearch.persist()
 
 
-def get_qa_chain(train_path: str, persist_name: str, fieldnames=None):
-    persist_directory_existed = os.path.exists(persist_name)
-    logger.info(persist_directory_existed)
-    if not persist_directory_existed:
-        logger.info(f'create persist_directory {persist_name}')
-        create_persist_directory(train_path, persist_name, fieldnames)
+def get_qa_chain():
+    create_persist_directory()
 
     embedding = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-    docsearch = Chroma(persist_directory=persist_name,
-                       embedding_function=embedding)
+    docsearch = Chroma(
+        persist_directory=constants.PERSIST_DIRECTORY_FPT_EXCHANGE,
+        embedding_function=embedding)
 
     # method 1
     qa_chain = load_qa_chain(LLM, chain_type="stuff")
@@ -216,9 +229,7 @@ def get_answer_with_documents(query: str, histories: list, email=None):
     token_use = query_token
     if query_token <= Config.LIMIT_MESSAGE_TOKEN:
         # query and get answer from db if posible
-        qa_chain, docsearch = get_qa_chain(train_path=Config.QA_TRAIN_DATA_PATH,
-                                           persist_name=constants.PERSIST_DIRECTORY_FPT_EXCHANGE,
-                                           fieldnames=['question', 'answer'])
+        qa_chain, docsearch = get_qa_chain()
 
         with get_openai_callback() as cb:
             query = str(query).lower()

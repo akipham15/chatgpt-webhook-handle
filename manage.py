@@ -24,10 +24,10 @@ def retrain():
         logger.info(f'remove persist_directory {persist_name}')
         shutil.rmtree(persist_name)
         logger.info(f'create persist_directory {persist_name}')
-        create_persist_directory(train_path, persist_name, fieldnames)
+        create_persist_directory()
     else:
         logger.info(f'create persist_directory {persist_name}')
-        create_persist_directory(train_path, persist_name, fieldnames)
+        create_persist_directory()
 
 
 if __name__ == "__main__":

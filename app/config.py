@@ -30,7 +30,7 @@ class Config(BaseConfig):
     DEFAULT_QUERY_DISTANCE = 0.29
 
     WELCOME_TRAIN_DATA_PATH = get_config('WELCOME_TRAIN_DATA_PATH', './data/train/welcome.csv')
-    QA_TRAIN_DATA_PATH = get_config('QA_TRAIN_DATA_PATH', './data/train/FPTCOM_QA_20230623.csv')
+    QA_TRAIN_DATA_PATH = get_config('QA_TRAIN_DATA_PATH', './data/train/FPTCOM_QA_20230628.csv')
     CUSTOM_TRAIN_DATA_PATH = get_config('CUSTOM_TRAIN_DATA_PATH', './data/train/custom_train.csv')
 
     PERMISSION_USERS = ['khanhph4@fpt.com', 'tult@fpt.com', 'congnt3@fpt.com', 'ductv8@fpt.com', 'tantt3@fpt.com',
